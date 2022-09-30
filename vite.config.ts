@@ -12,5 +12,6 @@ export default ({ mode }: any) => {
     build: {
       target: "esnext",
     },
+    publicDir: "public",
   });
 };
