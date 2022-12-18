@@ -9,7 +9,7 @@ const App: Component = () => {
   return (
     <Routes>
       <Route path="/customize" component={Customize} />
-      <Route path="/:id" component={Jedor} />
+      <Route path="/jedor" component={Jedor} />
       <Route path="/" component={Home} />
     </Routes>
   );

@@ -21,6 +21,9 @@
     "@felte/solid": "^1.2.5",
     "@felte/validator-zod": "^1.0.12",
     "@solidjs/router": "^0.4.3",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "crypto-js": "^4.1.1",
     "dotenv": "^16.0.2",
     "solid-js": "^1.5.1",
     "zod": "^3.19.1"

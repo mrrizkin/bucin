@@ -4,6 +4,10 @@ import { render } from "solid-js/web";
 
 import "virtual:windi.css";
 import App from "./App";
+//
+import { Buffer as BufferPolyfill } from "buffer";
+declare var Buffer: typeof BufferPolyfill;
+globalThis.Buffer = BufferPolyfill;
 
 render(
   () => (

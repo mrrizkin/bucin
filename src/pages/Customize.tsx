@@ -2,6 +2,7 @@ import { Component, Show, For, createSignal } from "solid-js";
 import { createForm } from "@felte/solid";
 import { validator } from "@felte/validator-zod";
 import { z } from "zod";
+import { decrypt, encrypt } from "../utils";
 
 const schema = z.object({
   sapaan: z.string().min(1, { message: "Tidak bisa kosong" }),
@@ -25,38 +26,18 @@ const Customize: Component = () => {
       nomor_wa: 81234567890,
       pesan_wa: "Hai, aku mau jadi pacar kamu",
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       let host = window.location.protocol + "//" + window.location.host;
       for (let key in values) {
         // @ts-ignore: this is string
         if (typeof values[key] === "string") {
           // @ts-ignore: replace ? to encoded ?
-          values[key] = values[key]
-            .replaceAll("?", "%3F")
-            .replaceAll("&", "%26")
-            .replaceAll("=", "%3D")
-            .replaceAll(" ", "%20")
-            .replaceAll(":", "%3A")
-            .replaceAll("/", "%2F")
-            .replaceAll("#", "%23");
+          values[key] = encodeURIComponent(values[key]);
         }
       }
-      setGeneratedUrl(
-        host +
-          `/62${values.nomor_wa}` +
-          "?sapaan=" +
-          values.sapaan +
-          "&nama=" +
-          values.nama +
-          "&pesan=" +
-          values.pesan +
-          "&pesan_wa=" +
-          values.pesan_wa +
-          "&kata_terima=" +
-          values.kata_terima +
-          "&kata_menolak=" +
-          values.kata_menolak
-      );
+      let msg = JSON.stringify(values);
+      let data = await encrypt(msg);
+      setGeneratedUrl(host + `/jedor?pesan=${encodeURIComponent(data)}`);
     },
     extend: validator({ schema }), // OR `extend: [validator],`
   });
