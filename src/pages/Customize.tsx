@@ -29,18 +29,10 @@ const Customize: Component = () => {
     },
     onSubmit: async (values) => {
       let host = window.location.protocol + "//" + window.location.host;
-      for (let key in values) {
-        // @ts-ignore: this is string
-        if (typeof values[key] === "string") {
-          // @ts-ignore: replace ? to encoded ?
-          values[key] = encodeURIComponent(values[key]);
-        }
-      }
       // @ts-ignore: schema need string
       values["nomor_wa"] = values["nomor_wa"].toString();
-      let buf = schemaAvro.toBuffer(values);
-      let data = await encrypt(buf);
-      setGeneratedUrl(host + `/jedor?pesan=${encodeURIComponent(data)}`);
+      let buf = schemaAvro.toBuffer(values).toString("base64");
+      setGeneratedUrl(host + `/jedor?pesan=${encodeURIComponent(buf)}`);
     },
     extend: validator({ schema }), // OR `extend: [validator],`
   });

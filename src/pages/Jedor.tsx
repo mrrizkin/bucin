@@ -14,14 +14,9 @@ const Jedor: Component = () => {
     pesan_wa: "",
   });
   const query = useLocation().query;
-  const hash = decodeURIComponent(query.pesan);
-  decrypt(hash).then((result) => {
-    let res_data = schema.fromBuffer(result);
-    for (let key in res_data) {
-      res_data[key] = decodeURIComponent(res_data[key]);
-    }
-    setData(res_data);
-  });
+  const buf = decodeURIComponent(query.pesan);
+  const res_data = schema.fromBuffer(Buffer.from(buf, "base64"));
+  setData(res_data);
   let ref: HTMLButtonElement;
   function handleClick() {
     moveButton(ref);
