@@ -18,7 +18,7 @@ export function moveButton(button: HTMLButtonElement) {
   button.style.transform = `translate(${x}px, ${y}px)`;
 }
 
-export async function encrypt(data: string): Promise<string> {
+export async function encrypt(data: Buffer): Promise<string> {
   const key = new Uint8Array(32);
   window.crypto.getRandomValues(key);
   const iv = new Uint8Array(16);
@@ -34,7 +34,7 @@ export async function encrypt(data: string): Promise<string> {
   const encrypted = await window.crypto.subtle.encrypt(
     algorithm,
     importedKey,
-    Buffer.from(data)
+    data
   );
   const encryptedBuffer = Buffer.from(encrypted);
   return `${Buffer.from(iv).toString("base64")}:${encryptedBuffer.toString(
@@ -42,7 +42,7 @@ export async function encrypt(data: string): Promise<string> {
   )}:${Buffer.from(key).toString("base64")}`;
 }
 
-export async function decrypt(data: string): Promise<string> {
+export async function decrypt(data: string): Promise<Buffer> {
   const [iv, encrypted, key] = data.split(":");
   const algorithm = { name: "AES-CBC", iv: Buffer.from(iv, "base64") };
   const importedKey = await window.crypto.subtle.importKey(
@@ -57,6 +57,5 @@ export async function decrypt(data: string): Promise<string> {
     importedKey,
     Buffer.from(encrypted, "base64")
   );
-  const decryptedBuffer = Buffer.from(decrypted);
-  return decryptedBuffer.toString("utf8");
+  return Buffer.from(decrypted);
 }

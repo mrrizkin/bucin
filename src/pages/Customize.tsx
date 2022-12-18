@@ -2,7 +2,8 @@ import { Component, Show, For, createSignal } from "solid-js";
 import { createForm } from "@felte/solid";
 import { validator } from "@felte/validator-zod";
 import { z } from "zod";
-import { decrypt, encrypt } from "../utils";
+import { encrypt } from "../utils";
+import schemaAvro from "../schema";
 
 const schema = z.object({
   sapaan: z.string().min(1, { message: "Tidak bisa kosong" }),
@@ -35,8 +36,10 @@ const Customize: Component = () => {
           values[key] = encodeURIComponent(values[key]);
         }
       }
-      let msg = JSON.stringify(values);
-      let data = await encrypt(msg);
+      // @ts-ignore: schema need string
+      values["nomor_wa"] = values["nomor_wa"].toString();
+      let buf = schemaAvro.toBuffer(values);
+      let data = await encrypt(buf);
       setGeneratedUrl(host + `/jedor?pesan=${encodeURIComponent(data)}`);
     },
     extend: validator({ schema }), // OR `extend: [validator],`

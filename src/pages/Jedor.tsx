@@ -1,6 +1,7 @@
 import { useLocation } from "@solidjs/router";
 import { Component, createSignal } from "solid-js";
 import { moveButton, createWhatsappURL, decrypt } from "../utils";
+import schema from "../schema";
 
 const Jedor: Component = () => {
   const [data, setData] = createSignal({
@@ -15,7 +16,7 @@ const Jedor: Component = () => {
   const query = useLocation().query;
   const hash = decodeURIComponent(query.pesan);
   decrypt(hash).then((result) => {
-    let res_data = JSON.parse(result);
+    let res_data = schema.fromBuffer(result);
     for (let key in res_data) {
       res_data[key] = decodeURIComponent(res_data[key]);
     }
